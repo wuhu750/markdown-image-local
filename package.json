@@ -1,0 +1,15 @@
+{
+  "name": "markdown-image-local",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "img2local": "./index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sharp": "^0.34.4"
+  }
+}
