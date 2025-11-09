@@ -120,15 +120,15 @@ async function processMarkdownFile(filePath) {
   // 读取文件内容
   const content = fs.readFileSync(filePath, 'utf8');
 
-  // 正则表达式匹配 Markdown 图片语法 ![alt](url)
-  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+  // 正则表达式匹配 Markdown 图片语法 ![alt](url) 或 [](url)
+  const imageRegex = /!?\[(.*?)\]\((.*?)\)/g;
   let newContent = content;
   let match;
   let index = 0;
 
   while ((match = imageRegex.exec(content)) !== null) {
     const [fullMatch, altText, imageUrl] = match;
-
+    
     // 只处理网络链接
     if (imageUrl.startsWith('http')) {
       try {
