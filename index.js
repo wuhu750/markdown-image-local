@@ -106,6 +106,36 @@ async function convertToJpg(inputPath, outputPath) {
 }
 
 /**
+ * 检查给定的URL是否指向图片资源
+ * @param {string} url 图片URL
+ * @returns {boolean}
+ */
+function isImageUrl(url) {
+  // 支持的图片扩展名
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg', '.ico', '.tiff', '.tif', '.awebp'];
+  
+  try {
+    const urlObj = new URL(url);
+    const extension = path.extname(urlObj.pathname).toLowerCase();
+    
+    // 检查是否有扩展名且是否为图片扩展名
+    if (extension && imageExtensions.includes(extension)) {
+      return true;
+    }
+    
+    // 检查一些特殊格式，如没有扩展名但实际是图片的情况
+    if (!extension) {
+      return imageExtensions.some(ext => urlObj.pathname.toLowerCase().endsWith(ext));
+    }
+    
+    return false;
+  } catch (error) {
+    // URL无效
+    return false;
+  }
+}
+
+/**
  * 处理单个 Markdown 文件
  * @param {string} filePath Markdown 文件路径
  */
@@ -129,8 +159,8 @@ async function processMarkdownFile(filePath) {
   while ((match = imageRegex.exec(content)) !== null) {
     const [fullMatch, altText, imageUrl] = match;
     
-    // 只处理网络链接
-    if (imageUrl.startsWith('http')) {
+    // 只处理网络链接，并且只处理真正的图片链接
+    if (imageUrl.startsWith('http') && isImageUrl(imageUrl)) {
       try {
         // 生成本地文件名
         const urlObj = new URL(imageUrl);
